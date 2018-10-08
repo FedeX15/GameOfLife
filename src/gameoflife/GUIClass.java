@@ -6,97 +6,97 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 /**
- * GUI del programma, con la matrice di bottoni e i pulsanti avvia e randomizza
+ * GUI of the program, with matrix and control buttons. Original written on 28-02-2014
  * @see ButtonListener
  * @version 28022014
  * @author Federico Matteoni
  */
 public class GUIClass extends JFrame implements java.io.Serializable {
     /**
-     * Le colonne della matrice
+     * Matrix columns
      */
     public final int colonne;
     /**
-     * Le righe della matrice
+     * Matrix rows
      */
     public final int righe;
     /**
-     * Matrice analizzata per creare la generazione successiva
+     * Boolean matrix, analyzed to get next generation
      * @see ButtonListener
      */
     public boolean[][] statoprecedente;
     /**
-     * Matrice di pulsanti, per selezionare le cellule di partenza e visualizzarne la progressione
+     * Button matrix, to select starting state and visualizing progression
      * @see ButtonListener
      */
     public JButton[][] matrice = null;
     /**
-     * Avvia l'algoritmo del Game of Life
+     * Starts the algorithm
      */
     public JButton avvia = null;
     /**
-     * Randomizza la matrice, for science
+     * Randomize the matrix, for science
      */
     public JButton casuale = null;
     /**
-     * Ferma l'algoritmo
+     * Stops the algorithm
      */
     public JButton ferma = null;
     /**
-     * Salva la classe su file, serializazzione
+     * Serialize class on file
      */
     public JButton salva = null;
     /**
-     * Contiene la matrice, con FlowLayout per una più "semplice" visualizzazione
+     * Contains the matrix, with FlowLayout for a "simpler" visualization
      */
     public JPanel pnlMatrice = null;
     /**
-     * Contiene pnlComandiA e pnlComandiB
+     * Contains pnlComandiA and pnlComandiB
      */
     public JPanel pnlComandi = null;
     /**
-     * Container principale
+     * Primary container
      */
     public Container cnt = null;
     
     /**
-     * Inizializzazione pulsanti-comandi, matrice, settaggio listener e actionCommand, inizializzazione pannelli, riempimento e posizionamento
+     * Initializes buttons, matrix, listeners, action commands and panels
      */
     public GUIClass() {
         super("The Game of Life");
-        ButtonListener listener = new ButtonListener(this); //Listener dei pulsanti, classe ButtonListner
+        ButtonListener listener = new ButtonListener(this); //ButtonListener
         righe = 20; colonne = 20;
-        matrice = new JButton[righe][colonne];  //Inizializzo la matrice
-        avvia = new JButton("Simula");
+        matrice = new JButton[righe][colonne];  //Matrix initialization
+        avvia = new JButton("Simulate");
         avvia.setBackground(Color.LIGHT_GRAY);
         avvia.addActionListener(listener);
-        avvia.setActionCommand("avvia");        //Inizializzazione del pulsante di avvio con listener e comando
-        casuale = new JButton("Random");
+        avvia.setActionCommand("avvia");        //Buttons initializations
+        casuale = new JButton("Randomize");
         casuale.setBackground(Color.LIGHT_GRAY);
         casuale.addActionListener(listener);
-        casuale.setActionCommand("random"); //Inizializzazione del pulsante di random con listener e comando
-        ferma = new JButton("Ferma");
+        casuale.setActionCommand("random");
+        ferma = new JButton("Stop");
         ferma.setBackground(Color.LIGHT_GRAY);
         ferma.addActionListener(listener);
-        ferma.setActionCommand("ferma");        //Inizializzazione del pulsante di arresto
-        salva = new JButton("Salva");
+        ferma.setActionCommand("ferma");
+        salva = new JButton("Save");
         salva.setBackground(Color.LIGHT_GRAY);
         salva.addActionListener(listener);
-        salva.setActionCommand("salva");        //Inizializzazione del pulsante di salvataggio
+        salva.setActionCommand("salva");
         
         pnlMatrice = new JPanel();
         pnlMatrice.setLayout(new GridLayout(righe, colonne));
         pnlMatrice.setBackground(Color.WHITE);
-        statoprecedente = new boolean[righe][colonne];  //Le due matrici che mi serviranno nell'algoritmo di simulazione
+        statoprecedente = new boolean[righe][colonne];  //The matrices I'll need in the algorithm
         for (int i = 0; i < righe; i++) {
             for (int j = 0; j < colonne; j++) {
-                statoprecedente[i][j] = false;      //Inizializzo tutto a false poichè nessuna cella è stata selezionata e non è ancora stata avviata la simulazione
+                statoprecedente[i][j] = false;      //Everything is false because life (no cell has been selected and the simulations has not yet started
                 matrice[i][j] = new JButton();
                 matrice[i][j].setBackground(Color.WHITE);
                 matrice[i][j].setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
                 matrice[i][j].addActionListener(listener);
                 matrice[i][j].setActionCommand(i + " " + j);
-                pnlMatrice.add(matrice[i][j]);  //A ogni pulsante della matrice assegno un listener e un comando composto dalle sue coordinate, in modo da memorizzare i pulsanti di partenza
+                pnlMatrice.add(matrice[i][j]);  //Assigning a listener to each matrix button and an action command which contains the coordinates
             }
         }
         pnlComandi = new JPanel();
@@ -108,11 +108,11 @@ public class GUIClass extends JFrame implements java.io.Serializable {
         cnt = getContentPane();
         cnt.setLayout(new BorderLayout());
         cnt.add(pnlMatrice, BorderLayout.CENTER);
-        cnt.add(pnlComandi, BorderLayout.SOUTH);    //Inizializzazione pannelli, riempimento, inizializzazione container e riempimento
+        cnt.add(pnlComandi, BorderLayout.SOUTH);    //Initializing panels and container
     }
     
     /**
-     * Carica la GUI da file o la inizializza con il suo costruttore, setta defaultCloseOperation, visibilità e dimensione
+     * Loads GUI from file or initializes it with its method, sets defaultCloseOperation, visibility and dimension
      * @param args Parametri da riga di comando
      */
     public static void main(String[] args) {
@@ -123,13 +123,12 @@ public class GUIClass extends JFrame implements java.io.Serializable {
         }
         win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         win.setVisible(true);
-        //Dimensionamento della finestra a seconda della matrice, sembra ok -inutile con GridLayout
         //win.setSize((win.matrice[0][0].getWidth() * win.colonne + 5*win.colonne + 18), (win.matrice[0][0].getHeight()*win.righe + 5*win.righe + 67));
         win.setSize(450, 450);
     }
     
     /**
-     * Serializzazione della GUI su file binario "gameoflife.bin"
+     * Serializes GUI on a binary file named "gameoflife.bin"
      */
     public void SaveState() {
         try {
@@ -141,7 +140,7 @@ public class GUIClass extends JFrame implements java.io.Serializable {
     }
     
     /**
-     * Deserializzazione della GUI da file binario "gameoflife.bin"
+     * Deserializes GUI from binary file "gameoflife.bin"
      * @return La matrice con listener inizializzati o null nel caso di errore
      */
     public static GUIClass ReadState() {
