@@ -5,27 +5,27 @@ import java.awt.event.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ActionListener che analizza e simula le generazioni, ferma la simulazione, randomizza la matrice e salva su file
+ * ActionListener which analizes and simulates generations, stops the simulation, randomize matrix and saves on file. Original written on 2014
  * @version 28022014
  * @author Federico Matteoni
  */
 public class ButtonListener implements ActionListener {
     /**
-     * La GUI su cui lavorare
+     * GUI where to work
      */
     public GUIClass win;
     /**
-     * Conteggio delle generazioni
+     * Generation counter
      */
     public int generazioni;
     /**
-     * Flag per avviare/fermare il thread
+     * Starts/Stops the tread
      */
     public boolean esegui;
     
     /**
-     * Inizializza il riferimento alla GUI, il conteggio delle generazioni e il flag di esecuzione del thread
-     * @param win La GUI a cui riferirsi per analizzare e modificare la matrice
+     * Initializes GUI reference, generation counter and thread flag
+     * @param win GUI reference where to update the matrix
      */
     public ButtonListener(GUIClass win) {
         this.win = win;
@@ -36,19 +36,19 @@ public class ButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
-            case "random": {  //Randomizzo la matrice
-                System.out.println("==== RANDOMIZZA =====");    //Intestazione
+            case "random": {  //Matrix randomizer
+                System.out.println("==== RANDOMIZE =====");    //Header
                 for (int i = 0; i < win.righe; i++) {
                     for (int j = 0; j < win.colonne; j++) {
                         double random = Math.random();
                         if (random > 0.7) {
-                            win.statoprecedente[i][j] = true;   //Attivo la corrispondente coordinata
+                            win.statoprecedente[i][j] = true;   //Activate the coordinate
                             win.matrice[i][j].setBackground(Color.BLACK);
-                            System.out.println("Cella[" + i + "][" + j + "] selezionata");     //Segnalo che la cella è selezionara
+                            System.out.println("Cella[" + i + "][" + j + "] activated");
                         } else {
-                            win.statoprecedente[i][j] = false;
+                            win.statoprecedente[i][j] = false;  //Deactivate the coordinate
                             win.matrice[i][j].setBackground(Color.WHITE);
-                            System.out.println("Cella[" + i + "][" + j + "] deselezionata");   //Segnalo che la cella è deselezionata
+                            System.out.println("Cella[" + i + "][" + j + "] deactivated");
                         }
 
                     }
@@ -57,24 +57,24 @@ public class ButtonListener implements ActionListener {
             }
             
             case "avvia": {
-                esegui = true;  //Abilito il thread ad essere eseguito
-                new Thread() {  //Crea un thread per la esecuzione del codice e permettere a Swing di aggiornare la GUI
+                esegui = true;  //Flag the thread to run
+                new Thread() {  //Thread execs the code and lets Swing update the GUI
                     @Override
                     public void run() {
                         do {
                             generazioni++;
-                            System.out.println("\n=== Generazione " + generazioni + " ==="); //Conteggio delle generazione, scopo informativo
+                            System.out.println("\n=== Generation no. " + generazioni + " ==="); //Generation counter just for info
                             try {
                                 TimeUnit.SECONDS.sleep(1);
                             }
                             catch (InterruptedException ex) {}
-                            //Rallento l'esecuzione per poter vedere e per alleggerire il programa
+                            //Slows down the execution to let the user see the various generations (and let the program be lighter)
                             
                             for (int i = 0; i < win.righe; i++) {
                                 for (int j = 0; j < win.colonne; j++) {
-                                    int conteggio = 0;      //Azzero il conteggio delle celle vive adiacenti alla cella corrente
+                                    int conteggio = 0;      //Counter of live cells next to the current cell
                                     
-                                    //Inizio controllo celle adiacenti
+                                    //Check the next cells
                                     try {
                                         conteggio = ((win.statoprecedente[i-1][j]) ? conteggio + 1 : conteggio);
                                         try {
@@ -99,14 +99,14 @@ public class ButtonListener implements ActionListener {
                                     try {
                                         conteggio = ((win.statoprecedente[i][j+1]) ? conteggio + 1 : conteggio);
                                     } catch (IndexOutOfBoundsException erroreIndice){}
-                                    //Fine controllo celle adiacenti
+                                    //end check
                                     
                                     if (conteggio == 3 && !(win.statoprecedente[i][j])) {
-                                        System.out.println(i + " " + j + " piena"); //Segnalo il riempimento di una cella
+                                        System.out.println(i + " " + j + " full");
                                         win.matrice[i][j].setBackground(Color.BLACK);
                                     }
                                     else if ((conteggio < 2 || conteggio > 3) && win.statoprecedente[i][j]) {
-                                        System.out.println(i + " " + j + " vuota"); //Segnalo lo svuotamento di una cella
+                                        System.out.println(i + " " + j + " empty");
                                         win.matrice[i][j].setBackground(Color.WHITE);
                                     }
                                 }
@@ -123,29 +123,29 @@ public class ButtonListener implements ActionListener {
             }
             
             case "ferma": {
-                esegui = false;     //Fermo l'esecuzione del thread
+                esegui = false;     //Stops thread execution
                 break;
             }
             
             case "salva": {
-                win.SaveState();    //Serializzazione su file binario
+                win.SaveState();    //Serialization on binary file
                 break;
             }
             
-            default: {   //Se nessuno degli action command è riconosciuto allora ho per forza cliccato su un pulsante della matrice, quindi lo gestisco
+            default: {   //The dafult behavior is handling a matrix button click, given that if the action command is unrecognized I must have clicked on a matrix button
                 int riga, colonna;
                 riga = Integer.parseInt(e.getActionCommand().substring(0, e.getActionCommand().indexOf(' ')));
-                colonna = Integer.parseInt(e.getActionCommand().substring(e.getActionCommand().indexOf(' ') + 1, e.getActionCommand().length()));   //Ricavo le coordinate del pulsante dal suo actionCommand
-                System.out.print("Cella[" + riga + "][" + colonna + "]");  //Segnalo la cella che sto analizzando
-                if (!win.statoprecedente[riga][colonna]) { //Se la coordinata corrispondente nella matrice di boolean è falsa, cioè che la cella era morta
-                    win.statoprecedente[riga][colonna] = true;  //La faccio vivere *musica celestiale"
+                colonna = Integer.parseInt(e.getActionCommand().substring(e.getActionCommand().indexOf(' ') + 1, e.getActionCommand().length()));   //Coordinates from button action command
+                System.out.print("Cella[" + riga + "][" + colonna + "]"); 
+                if (!win.statoprecedente[riga][colonna]) { //If the current coordinate is false, which means the cell was dead
+                    win.statoprecedente[riga][colonna] = true;  //I'll resurrect it *celestial music*
                     win.matrice[riga][colonna].setBackground(Color.BLACK);
-                    System.out.println(" selezionata");     //Segnalo che la cella è stata selezionata
+                    System.out.println(" activated");
                 }
                 else {
-                    win.statoprecedente[riga][colonna] = false; //Se era già viva la uccido *risata malefica*
+                    win.statoprecedente[riga][colonna] = false; //If it was alive I kill it *evil laugh*
                     win.matrice[riga][colonna].setBackground(Color.WHITE);
-                    System.out.println(" deselezionata");   //Segnalo che la cella è stata deselezionata
+                    System.out.println(" deactivated");
                 }   break;
             }
         }
