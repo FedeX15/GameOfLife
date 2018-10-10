@@ -8,7 +8,7 @@ import javax.swing.border.*;
 /**
  * GUI of the program, with matrix and control buttons. Original written on 28-02-2014
  * @see ButtonListener
- * @version 28022014
+ * @version 10102018
  * @author Federico Matteoni
  */
 public class GUIClass extends JFrame implements java.io.Serializable {
@@ -47,6 +47,10 @@ public class GUIClass extends JFrame implements java.io.Serializable {
      */
     public JButton salva = null;
     /**
+     * Clears the buttons matrix
+     */
+    public JButton clear = null;
+    /**
      * Contains the matrix, with FlowLayout for a "simpler" visualization
      */
     public JPanel pnlMatrice = null;
@@ -83,6 +87,10 @@ public class GUIClass extends JFrame implements java.io.Serializable {
         salva.setBackground(Color.LIGHT_GRAY);
         salva.addActionListener(listener);
         salva.setActionCommand("salva");
+        clear = new JButton("Clear");
+        clear.setBackground(Color.LIGHT_GRAY);
+        clear.addActionListener(listener);
+        clear.setActionCommand("clear");
         
         pnlMatrice = new JPanel();
         pnlMatrice.setLayout(new GridLayout(righe, colonne));
@@ -104,6 +112,7 @@ public class GUIClass extends JFrame implements java.io.Serializable {
         pnlComandi.add(avvia);
         pnlComandi.add(ferma);
         pnlComandi.add(casuale);
+        pnlComandi.add(clear);
         pnlComandi.add(salva);
         cnt = getContentPane();
         cnt.setLayout(new BorderLayout());

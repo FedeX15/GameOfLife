@@ -5,8 +5,8 @@ import java.awt.event.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ActionListener which analizes and simulates generations, stops the simulation, randomize matrix and saves on file. Original written on 2014
- * @version 28022014
+ * ActionListener which analizes and simulates generations, stops the simulation, randomize matrix and saves on file. Original written on 28-02-2014
+ * @version 10102018
  * @author Federico Matteoni
  */
 public class ButtonListener implements ActionListener {
@@ -124,6 +124,19 @@ public class ButtonListener implements ActionListener {
             
             case "ferma": {
                 esegui = false;     //Stops thread execution
+                break;
+            }
+            
+            case "clear": {
+                esegui = false;     //Stops thread execution
+                System.out.println("==== CLEARING =====");    //Header
+                for (int i = 0; i < win.righe; i++) {
+                    for (int j = 0; j < win.colonne; j++) {
+                        win.statoprecedente[i][j] = false;  //Deactivate the coordinate
+                        win.matrice[i][j].setBackground(Color.WHITE);
+                        System.out.println("Cella[" + i + "][" + j + "] deactivated");
+                    }
+                }
                 break;
             }
             
