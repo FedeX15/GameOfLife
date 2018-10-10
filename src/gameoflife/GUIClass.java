@@ -166,6 +166,8 @@ public class GUIClass extends JFrame implements java.io.Serializable {
             state.ferma.setActionCommand("ferma");
             state.salva.addActionListener(listener);
             state.salva.setActionCommand("salva");
+            state.clear.addActionListener(listener);
+            state.clear.setActionCommand("clear");
             
             for (int i = 0; i < state.righe; i++) {
                 for (int j = 0; j < state.colonne; j++) {   
