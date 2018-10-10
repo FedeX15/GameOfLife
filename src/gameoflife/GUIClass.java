@@ -64,12 +64,22 @@ public class GUIClass extends JFrame implements java.io.Serializable {
     public Container cnt = null;
     
     /**
+     * Rows of the button matrix
+     */
+    public int rows = 30;
+    
+    /**
+     * Columns of the button matrix
+     */
+    public int columns = 30;
+    
+    /**
      * Initializes buttons, matrix, listeners, action commands and panels
      */
     public GUIClass() {
         super("The Game of Life");
         ButtonListener listener = new ButtonListener(this); //ButtonListener
-        righe = 20; colonne = 20;
+        righe = this.rows; colonne = this.columns;
         matrice = new JButton[righe][colonne];  //Matrix initialization
         avvia = new JButton("Simulate");
         avvia.setBackground(Color.LIGHT_GRAY);
